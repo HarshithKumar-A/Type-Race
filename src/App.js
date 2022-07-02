@@ -27,14 +27,15 @@ function App() {
     let newNewText = event.target.value;
     let correctLength = gameState.snippet.startsWith(newNewText) ? newNewText.length : gameState.correctLength;
     let totalTime = ((new Date() - gameState.startTime) / 1000).toFixed(2);
-    let newWpm  = updateTime(newNewText, totalTime)
+    let newWpm = updateTime(newNewText, totalTime)
+    let wrongTexts = gameState.snippet.slice(correctLength, newNewText.length).split(' ').join("_")
     setGameState({
       ...gameState,
-      wpm:newWpm,
+      wpm: newWpm,
       enteredText: newNewText,
       correctLength: correctLength,
       correctText: gameState.snippet.slice(0, correctLength),
-      wrongTexts: gameState.snippet.slice(correctLength, newNewText.length),
+      wrongTexts: wrongTexts,
       yetToBeEntered: gameState.snippet.slice(newNewText.length),
     });
 
@@ -48,14 +49,13 @@ function App() {
     }
   }
 
-  const updateTime = (newText,totalTime) => {
+  const updateTime = (newText, totalTime) => {
     setWpm((newText.split(/\s+/).length === 1 ? 0 : (newText.split(/\s+/).length * 60) / totalTime).toFixed(2));
-    console.log('jo')
     return wpm;
   }
 
-  const startRace = () => {
-    let snippet = jsonData[Math.floor(Math.random() * jsonData.length)];
+  const startRace = (oldSnippet) => {
+    let snippet = oldSnippet ? oldSnippet : jsonData[Math.floor(Math.random() * jsonData.length)];
     inputRef.current.focus()
     setGameState({
       started: true,
@@ -102,7 +102,10 @@ function App() {
             {gameState.yetToBeEntered}
           </span>
         </span>
-        <button onClick={startRace} className="col-2 m-4 btn btn-light">{gameState.started ? "Restart" : "Start"} Race</button>
+        <div className='col-4 d-flex justify-content-around'>
+          <button onClick={() => startRace(false)} className="col-5 btn btn-light">{gameState.started ? "Restart" : "Start"} Race</button>
+          {gameState.started && <button onClick={() => startRace(gameState.snippet)} className="col-5 btn btn-light">Retry This Snippet</button>}
+        </div>
         <div className='position-relative'>
           <input ref={inputRef} className='m-4 opacity-0' value={gameState.enteredText} onChange={updateEnteredText} disabled={gameState.victory}></input>
           <span className='position-absolute col-12 h-100 start-0 text-center'>
