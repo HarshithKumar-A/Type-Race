@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import classNames from 'classnames';
 import jsonData from "./snippets.json"
 import './App.css';
+import Sidebar from './component/sidebar/sidebar';
 import { SetScore, UserData } from './util';
+import ReactSpeedometer from "react-d3-speedometer"
 
 function App() {
   const inputRef = React.createRef();
   const [wpm, setWpm] = useState(0);
+  const [gameModeNew, setGameMode] = useState(0);
   // const [snippet, setSnippet] = useState("");
   const [gameState, setGameState] = useState({
     started: false,
@@ -86,6 +89,7 @@ function App() {
 
   return (
     <div>
+      <Sidebar gameMode={gameModeNew} setGameMode={setGameMode} />
       <div className={
         classNames(
           "vh-100 vw-100 d-flex flex-column justify-content-center align-items-center",
@@ -93,7 +97,17 @@ function App() {
         )
       }
       >
-        <span>{wpm}WPM</span>
+        <span className={classNames({ "d-none": gameModeNew !== 2 })}>
+          <ReactSpeedometer
+            minValue={0}
+            maxValue={100}
+            value={wpm}
+            height = {325}
+            width = {600}
+            currentValueText = {`${wpm}WPM`}
+          />
+        </span>
+        <span className={classNames({ "d-none": gameModeNew === 2 })}>{wpm}WPM</span>
         <span className='p-4' onClick={() => { if (inputRef.current) { inputRef.current.focus() } }}>
           <span className={classNames('text-success', { "text-muted": gameState.victory })}>
             {gameState.correctText}
