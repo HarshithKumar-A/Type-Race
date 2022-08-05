@@ -25,10 +25,11 @@ function App() {
   });
   const updateEnteredText = event => {
     let newNewText = event.target.value;
-    let correctLength = gameState.snippet.startsWith(newNewText) ? newNewText.length : gameState.correctLength;
+    let correctLength = gameState.snippet.startsWith(newNewText) ? newNewText.length : (gameState.correctLength || 0);
+    console.log(correctLength, gameState.correctLength, newNewText.length)
     let totalTime = ((new Date() - gameState.startTime) / 1000).toFixed(2);
     let newWpm = updateTime(newNewText, totalTime)
-    let wrongTexts = gameState.snippet.slice(correctLength, newNewText.length).split(' ').join("_")
+    let wrongTexts = gameState.snippet.slice(correctLength, newNewText.length)
     setGameState({
       ...gameState,
       wpm: newWpm,
@@ -97,7 +98,7 @@ function App() {
           <span className={classNames('text-success', { "text-muted": gameState.victory })}>
             {gameState.correctText}
           </span>
-          <span className='text-danger'>{gameState.wrongTexts}</span>
+          <span className='bg-danger'>{gameState.wrongTexts}</span>
           <span className={classNames({ "text-muted": gameState.victory })}>
             {gameState.yetToBeEntered}
           </span>
