@@ -5,8 +5,13 @@ import './App.css';
 import Sidebar from './component/sidebar/sidebar';
 import { SetScore, UserData } from './util';
 import ReactSpeedometer from "react-d3-speedometer"
+import RaceCanvas from './component/raceCanvas/RaceCanvas';
+// import ringer from '/home/qburst/Desktop/FinHome/fin_race/public/typewriter.mp3'
 
 function App() {
+  // const [audio] = useState(new Audio(ringer));
+  const correctAudio = new Audio('https://www.typingclub.com/m/audio/typewriter.mp3');
+  const wrongAudio = new Audio('https://www.typingclub.com/m/audio/error.mp3');
   const inputRef = React.createRef();
   const [wpm, setWpm] = useState(0);
   const [gameModeNew, setGameMode] = useState(0);
@@ -32,7 +37,12 @@ function App() {
     console.log(correctLength, gameState.correctLength, newNewText.length)
     let totalTime = ((new Date() - gameState.startTime) / 1000).toFixed(2);
     let newWpm = updateTime(newNewText, totalTime)
-    let wrongTexts = gameState.snippet.slice(correctLength, newNewText.length)
+    let wrongTexts = gameState.snippet.slice(correctLength, newNewText.length);
+    if (wrongTexts.length === 0 ) {
+      correctAudio.play();
+    } else {
+      wrongAudio.play();
+    }
     setGameState({
       ...gameState,
       wpm: newWpm,
@@ -106,6 +116,9 @@ function App() {
             width = {600}
             currentValueText = {`${wpm}WPM`}
           />
+        </span>
+        <span className={classNames("w-75", { "d-none": gameModeNew !== 1 })}>
+          <RaceCanvas totalLength = {gameState.snippet.split(/\s+/).length} correctLength = {gameState.correctText?.split(/\s+/).length}/>
         </span>
         <span className={classNames({ "d-none": gameModeNew === 2 })}>{wpm}WPM</span>
         <span className='p-4' onClick={() => { if (inputRef.current) { inputRef.current.focus() } }}>
