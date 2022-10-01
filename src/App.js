@@ -10,6 +10,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { currentProgressOwn, currentSpeedProgress } from './redux/slice/raceSlice';
 import Confetti from 'react-confetti';
 import { useWindowSize } from '@react-hook/window-size';
+import { Fab, Action } from 'react-tiny-fab';
+import Drawer from 'react-modern-drawer';
+import 'react-modern-drawer/dist/index.css'
 
 function App() {
   const correctAudio = new Audio('https://www.typingclub.com/m/audio/typewriter.mp3');
@@ -18,6 +21,7 @@ function App() {
   const { width, height } = useWindowSize()
   const [wpm, setWpm] = useState(0);
   const [gameModeNew, setGameMode] = useState(0);
+  const [openBottomDrawer, setOpenBottomDrawer] = useState(false);
   const [gameState, setGameState] = useState({
     started: false,
     victory: false,
@@ -44,7 +48,7 @@ function App() {
     sessionStorage.setItem('GameStarted', false)
     const interval = setInterval(() => {
       if (sessionStorage.getItem('GameStarted') !== 'false') {
-        let speed = (localStorage.getItem('Score')/ sessionStorage.getItem('snippetLength')) * 1.6666666666666667
+        let speed = (localStorage.getItem('Score') / sessionStorage.getItem('snippetLength')) * 1.6666666666666667
         if (sessionStorage.getItem('newGame') === 'true') {
           race.progressOpenenet1 = 0
           sessionStorage.setItem('newGame', false)
@@ -141,24 +145,51 @@ function App() {
       console.log(gameState)
     }
   }
-
+  const toggleDrawer = () => {
+    setOpenBottomDrawer((prevState) => !prevState)
+  }
 
   return (
     <div>
-          <Confetti
-      width={width}
-      height={height}
-      run = {gameFinished}
-    />
+
+      <Fab
+        alwaysShowTitle={true}
+        style={{ bottom: 0 }}
+        icon="+"
+      >
+        <Action
+          text="Background Images"
+          onClick={() => { setOpenBottomDrawer(true) }}
+        >
+          <img src='picture.svg' className='vehicle'></img>
+        </Action>
+      </Fab>
+
+      <Drawer
+        open={openBottomDrawer}
+        onClose={toggleDrawer}
+        direction='bottom'
+        className='bla bla bla'
+      >
+        <div>From Here You Can Select Background Images</div>
+      </Drawer>
+
+      <Confetti
+        width={width}
+        height={height}
+        run={gameFinished}
+      />
       <Sidebar gameMode={gameModeNew} setGameMode={setGameMode} />
+      <div className='background-wallpaper'></div>
       <div className={
+
         classNames(
           "vh-100 vw-100 d-flex flex-column justify-content-center align-items-center",
-          { "bg-success": gameState.victory, " bg-info": !gameState.victory, "bg-warning": gameState.wrongTexts?.length },
+          { "bg-success": gameState.victory, " bg-info-test": !gameState.victory, "bg-warning": gameState.wrongTexts?.length },
         )
       }
       >
-        <span className={classNames({ "d-none": gameModeNew !== 2 })}>
+        <span className={classNames("d-flex justify-content-center text-canvas w-95", { "d-none": gameModeNew !== 2 })}>
           <ReactSpeedometer
             minValue={0}
             maxValue={100}
@@ -166,14 +197,16 @@ function App() {
             height={325}
             width={600}
             currentValueText={`${wpm}WPM`}
+            textColor={'#fff'}
+            needleColor='#b9dfff'
           />
         </span>
-        <span className={classNames("w-75", { "d-none": gameModeNew !== 1 })}>
+        <span className={classNames("w-95 text-canvas", { "d-none": gameModeNew !== 1 })}>
           <RaceCanvas totalLength={gameState.snippet.split(/\s+/).length} correctLength={gameState.correctText?.split(/\s+/).length} race1={race.progressOpenenet1} />
         </span>
         <span className={classNames({ "d-none": gameModeNew === 2 })}>{wpm}WPM</span>
-        <span className='p-4' onClick={() => { if (inputRef.current) { inputRef.current.focus() } }}>
-          <span className={classNames('text-success', { "text-muted": gameState.victory })}>
+        <span className='p-4 text-canvas w-95 text-center' onClick={() => { if (inputRef.current) { inputRef.current.focus() } }}>
+          <span className={classNames('text-success bg-white', { "text-muted": gameState.victory })}>
             {gameState.correctText}
           </span>
           <span className='bg-danger'>{gameState.wrongTexts}</span>

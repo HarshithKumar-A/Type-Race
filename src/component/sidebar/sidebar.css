@@ -1,4 +1,4 @@
-ul {
+.sidebar-fin {
     position: fixed;
     display: block;
     list-style-type: none;
@@ -16,7 +16,7 @@ ul {
     }
 }
 
-li {
+.sidebar-fin li {
     margin-bottom: 60px;
     margin-right: -24px;
     padding: 0 15px;
@@ -32,7 +32,7 @@ li {
 
 }
 
-li a {
+.sidebar-fin li a {
     font-size: 14px;
     text-transform: none;
     text-align: center;
@@ -40,7 +40,7 @@ li a {
     color: #ebebeb;
 }
 
-li:hover {
+.sidebar-fin li:hover {
     background-color: rgba(30, 45, 127, 1);
     color: #fff;
 }
