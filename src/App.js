@@ -22,6 +22,7 @@ function App() {
   const [wpm, setWpm] = useState(0);
   const [gameModeNew, setGameMode] = useState(0);
   const [openBottomDrawer, setOpenBottomDrawer] = useState(false);
+  const [bgUrl, setBgURL] = useState('/bg/bg3.jpg');
   const [gameState, setGameState] = useState({
     started: false,
     victory: false,
@@ -44,6 +45,7 @@ function App() {
   })
   const dispatch = useDispatch()
   useEffect(() => {
+    chnageBG()
     sessionStorage.setItem('newGame', false);
     sessionStorage.setItem('GameStarted', false)
     const interval = setInterval(() => {
@@ -149,6 +151,11 @@ function App() {
     setOpenBottomDrawer((prevState) => !prevState)
   }
 
+  const chnageBG = () => {
+    const list = ['/bg/bg.jpg', '/bg/bg2.jpg', '/bg/bg3.jpg', '/bg/bg4.jpg', '/bg/bg5.jpg']
+    setBgURL(list[Math.floor((Math.random()*list.length))])
+  }
+
   return (
     <div>
 
@@ -180,7 +187,7 @@ function App() {
         run={gameFinished}
       />
       <Sidebar gameMode={gameModeNew} setGameMode={setGameMode} />
-      <div className='background-wallpaper'></div>
+      <div className='background-wallpaper' style={{backgroundImage: 'url(' + bgUrl + ')'}}></div>
       <div className={
 
         classNames(
