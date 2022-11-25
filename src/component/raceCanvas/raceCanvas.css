@@ -7,4 +7,8 @@
 }
 .vehicle {
     width: 40px;
+    font-size: small;
+}
+.vehicle span {
+    color: #ffcc97;
 }

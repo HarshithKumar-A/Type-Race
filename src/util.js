@@ -8,3 +8,14 @@ export const UserData = () => {
 export const SetScore = (score) => {
     localStorage.setItem("Score", score)
 }
+
+export const setStorage = (key, value) => {
+    localStorage.setItem(key, JSON.stringify(value))
+}
+
+
+export const getStaorage = (key) => {
+    let localStorageData = localStorage.getItem(key) || null;
+    // setStorage(key, localStorageData)
+    return JSON.parse(localStorageData);
+}

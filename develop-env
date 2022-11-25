@@ -1,0 +1,7 @@
+REACT_APP_API_HOST='https://calicut.qburst.in/testmatedev'
+REACT_APP_API_PORT=''
+REACT_APP_LOGIN_REDIRECT_URL='https://calicut.qburst.in/testmateweb/login-redirect'
+REACT_APP_PUBLIC_URL = '/testmateweb'
+REACT_APP_TRACKING_ID=UA-141769459-1
+
+PUBLIC_URL='/testmateweb'
