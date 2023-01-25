@@ -165,13 +165,13 @@ function Home() {
 
   const postUserScore = () => {
 
-    const userPrevScore = scorelist.filter((elm) => elm.name === getStaorage('User_Details').id);
+    const userPrevScore = scorelist.filter((elm) => elm.name === getStaorage('User_Detail').id);
     console.log(userPrevScore, Number(gameState.wpm))
     if (userPrevScore.length === 0 || userPrevScore[0]?.score < Number(gameState.wpm)) {
       const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: getStaorage('User_Details').id, score: Number(gameState.wpm) })
+        body: JSON.stringify({ name: getStaorage('User_Detail').id, score: Number(gameState.wpm) })
       };
       fetch(process.env.REACT_APP_API_PORT + '/leadboard/', requestOptions)
         .then(response => navigate('/scores'))
@@ -186,7 +186,7 @@ function Home() {
     //       'Access-Control-Allow-Headers': 'API-Key,Content-Type,If-Modified-Since,Cache-Control',
     //       'Access-Control-Max-Age': '86400'
     //      },
-    //     body: JSON.stringify({ name: getStaorage('User_Details').id, score: Number(gameState.wpm) })
+    //     body: JSON.stringify({ name: getStaorage('User_Detail').id, score: Number(gameState.wpm) })
     //   };
     //   fetch(process.env.REACT_APP_API_PORT + '/leadboard/' + userPrevScore[0].id, requestOptions)
     //     .then(response => navigate('/scores'))
@@ -233,7 +233,7 @@ function Home() {
   };
 
   const isNewUser = () => {
-    setModal(getStaorage('User_Details') ? false : true);
+    setModal(getStaorage('User_Detail') ? false : true);
   }
 
   const registerUser = () => {
@@ -246,7 +246,7 @@ function Home() {
       .then(response => response.json())
       .then(res => {
         if (res.id) {
-          setStorage('User_Details', res);
+          setStorage('User_Detail', res);
           isNewUser();
         } else {
           alert(res.name)
