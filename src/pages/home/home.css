@@ -12,3 +12,6 @@ body {
       monospace;
   }
   
+  .font-size-changer {
+    float: right;
+  }

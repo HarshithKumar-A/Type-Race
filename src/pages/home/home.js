@@ -15,6 +15,7 @@ import Drawer from 'react-modern-drawer';
 import 'react-modern-drawer/dist/index.css';
 import { useNavigate } from "react-router-dom";
 import Modal from 'react-modal';
+import FontSizeChanger from 'react-font-size-changer';
 
 function Home() {
   const correctAudio = new Audio('https://www.typingclub.com/m/audio/typewriter.mp3');
@@ -324,8 +325,17 @@ function Home() {
           <RaceCanvas totalLength={gameState.snippet.split(/\s+/).length} correctLength={gameState.correctText?.split(/\s+/).length} race1={race.progressOpenenet1}
             scorelist={scorelist[0]} />
         </span>
-        <span className={classNames({ "d-none": gameModeNew === 2 })}>{wpm}WPM</span>
-        <span className='p-4 text-canvas w-95 text-center' onClick={() => { if (inputRef.current) { inputRef.current.focus() } }}>
+        <div style={{width: '90%'}}>
+          <span className={classNames({ "d-none": gameModeNew === 2 })}>{wpm}WPM</span>
+          <FontSizeChanger
+            targets={['#target-one']}
+            options={{
+              stepSize: 2,
+              range: 40
+            }}
+          />
+        </div>
+        <span id="target-one" className='p-4 text-canvas w-95 text-center' onClick={() => { if (inputRef.current) { inputRef.current.focus() } }}>
           <span className={classNames('text-success bg-white', { "text-muted": gameState.victory })}>
             {gameState.correctText}
           </span>
