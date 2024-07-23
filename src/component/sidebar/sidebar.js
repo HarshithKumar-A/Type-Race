@@ -11,6 +11,7 @@ export default function
                 <li onClick={() => props.setGameMode(0)}><a> Clasic</a></li>
                 <li onClick={() => props.setGameMode(1)}><a> Racing </a></li>
                 <li onClick={() => props.setGameMode(2)}><a >Meter </a></li>
+                <li onClick={() => props.setGameMode(3)}><a >War </a></li>
             </ul>
             {
                 props.gameMode.mode !== 1 && !props.gameMode.gameStarted &&

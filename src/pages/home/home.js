@@ -16,6 +16,7 @@ import 'react-modern-drawer/dist/index.css';
 import { useNavigate } from "react-router-dom";
 import Modal from 'react-modal';
 import FontSizeChanger from 'react-font-size-changer';
+import War from '../../component/War/war';
 
 function Home() {
   const correctAudio = new Audio('https://www.typingclub.com/m/audio/typewriter.mp3');
@@ -320,6 +321,9 @@ function Home() {
             textColor={'#fff'}
             needleColor='#b9dfff'
           />
+        </span>
+        <span className={classNames("d-flex justify-content-center text-canvas w-95", { "d-none": gameModeNew !== 3 })}>
+          <War />
         </span>
         <span className={classNames("w-95 text-canvas", { "d-none": gameModeNew !== 1 })}>
           <RaceCanvas totalLength={gameState.snippet.split(/\s+/).length} correctLength={gameState.correctText?.split(/\s+/).length} race1={race.progressOpenenet1}
