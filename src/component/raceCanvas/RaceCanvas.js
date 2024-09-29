@@ -16,7 +16,7 @@ export default function RaceCanvas(props) {
         setPosition(ranks)
     }, [bootProgrss]);
 
-    console.log(props.scorelist);
+    console.log(props.scoreList);
 
     return (
         <div>
@@ -25,16 +25,17 @@ export default function RaceCanvas(props) {
                     You
                     <div>
                         <span className='vehicle'>#{positions[0]}</span>
-                        <img src='1299198.svg' className='vehicle'></img>
+                        <img src='1299198.svg' className='vehicle' alt='Car'></img>
                     </div>
                 </div>
             </div>
             <div style={{ paddingLeft: 'calc(' + (bootProgrss < 100 ? bootProgrss : 100) + '% - 50px)' }} className='progress-bar'>
                 <div className='vehicle'>
-                    {props.scorelist?.player_name}
+                    {props.scoreList?.player_name}
+                    (<span className='helper-text'>#1 in <a href='/scores'>Leadboard</a> ⚡</span>)
                     <div>
                         <span className='vehicle'>#{positions[1]}</span>
-                        <img src='1299198.svg' className='vehicle'></img>
+                        <img src='1299198.svg' className='vehicle' alt='Car'></img>
                     </div>
                 </div>
             </div>
@@ -43,7 +44,7 @@ export default function RaceCanvas(props) {
                     Boot
                     <div>
                         <span className='vehicle'>#{positions[2]}</span>
-                        <img src='1299198.svg' className='vehicle'></img>
+                        <img src='1299198.svg' className='vehicle' alt='Car'></img>
                     </div>
                 </div>
             </div>

@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
-import { useEffect } from 'react';
-import './score_board.css'
+import React, { useState, useEffect } from 'react';
+import './score_board.css';
+import { FabOptions } from '../../component/Fab/Fab_Options';
 
 export default function ScoreBoard() {
-
-    const [scorelist, setScoreList] = useState([])
+    const [scorelist, setScoreList] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         fetch(process.env.REACT_APP_API_PORT + "/leadboard/")
@@ -12,59 +12,55 @@ export default function ScoreBoard() {
             .then(
                 (result) => {
                     console.log(result);
-                    setScoreList(getUniqueScore(result))
+                    setScoreList(getUniqueScore(result));
+                    setLoading(false);
                 },
                 (error) => {
-                    console.log(error)                                                                                                                                                                  
+                    console.log(error);
+                    setLoading(false);
                 }
-            )
-
-        // const requestOptions = {
-        //     method: 'POST',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     body: JSON.stringify({name: 2,score: 123})
-        // };
-        // fetch('http://127.0.0.1:8000/leadboard/', requestOptions)
-        //     .then(response => response.json())
-
-    }, [])
+            );
+    }, []);
 
     const getUniqueScore = (scores) => {
-        const dict = new Set
-        const result = []
+        const dict = new Set();
+        const result = [];
         scores.forEach((elm) => {
             if (!dict.has(elm.name)) {
-                result.push(elm)
-                dict.add(elm.name)
+                result.push(elm);
+                dict.add(elm.name);
             }
-        })
-        return result
-    }
+        });
+        return result;
+    };
 
-    const scoreList = scorelist.map((elm) => {
-        return (
-            <li>
-                <mark>{elm.player_name}</mark>
-                <small>{elm.score}</small>
-            </li>
-        );
-    })
+    const scoreList = scorelist.map((elm, index) => (
+        <li key={elm.name}>
+            <mark>{elm.player_name} {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : ''}</mark>
+            <small>{elm.score}</small>
+        </li>
+    ));
 
     return (
-        <div>
-            <div className="container">
+        <>
+            <div className="container mt-4 p-3 round">
                 <div className="leaderboard">
                     <div className="head">
                         <i className="fas fa-crown"></i>
                         <h1>Score Board</h1>
                     </div>
                     <div className="body">
-                        <ol>
-                            {scoreList}
-                        </ol>
+                        {loading ? (
+                            <div className="loader"></div>
+                        ) : (
+                            <ol>
+                                {scoreList}
+                            </ol>
+                        )}
                     </div>
                 </div>
             </div>
-        </div>
-    )
+            <FabOptions showOptionArray={['home', 'about']} />
+        </>
+    );
 }

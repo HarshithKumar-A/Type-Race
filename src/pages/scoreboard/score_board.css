@@ -3,6 +3,7 @@ a {
 	color: #333;
 	text-decoration: none;
 }
+
 .blog {
 	font-size: 14px;
 	font-weight: bold;
@@ -20,10 +21,6 @@ a {
 	border-radius: 10px;
 	background-color: white;
 	box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-	position: absolute;
-	top: 20px;
-	left: 50%;
-	transform: translate(-50%, 0);
 	z-index: 1;
 	overflow: hidden;
 }
@@ -31,6 +28,8 @@ a {
 /* leaderboard */
 .leaderboard {
 	background: linear-gradient(to bottom, #3a404d, #181c26);
+	border-radius: 10px;
+	padding: 10px;
 }
 
 /* head */
@@ -40,6 +39,7 @@ a {
 	font-size: 20px;
 	text-align: center;
 }
+
 .leaderboard .head h1 {
 	display: inline-block;
 	margin-left: 4px;
@@ -50,38 +50,78 @@ a {
 	color: snow;
 	font-size: 16px;
 }
+
 .leaderboard ol {
 	counter-reset: number;
 }
+
 .leaderboard li {
+	border-radius: 10px;
 	padding: 16px;
 	display: flex;
+	margin-top: 8px;
 }
+
 .leaderboard li mark {
 	flex-grow: 1;
 	color: snow;
 	background-color: transparent;
+	padding: 0;
 }
+
 .leaderboard li:before {
 	counter-increment: number;
 	content: counter(number) ".";
 	margin-right: 4px;
 }
-.leaderboard li:nth-child(1) {
+
+.leaderboard li:nth-child(5n+1) {
 	background: #fa6855;
 }
-.leaderboard li:nth-child(2) {
+
+.leaderboard li:nth-child(5n+2) {
 	background: #e0574f;
 }
-.leaderboard li:nth-child(3) {
+
+.leaderboard li:nth-child(5n+3) {
 	background: #d7514d;
 }
-.leaderboard li:nth-child(4) {
+
+.leaderboard li:nth-child(5n+4) {
 	background: #cd4b4b;
 }
-.leaderboard li:nth-child(5) {
+
+.leaderboard li:nth-child(5n+5) {
 	background: #c24448;
 }
-ol, ul {
-    padding-left: 0;
+
+.leaderboard li:hover {
+	background: #f7595e;
+}
+
+ol,
+ul {
+	padding-left: 0;
+}
+
+/* Loader styles */
+.loader {
+	border: 8px solid #f3f3f3;
+	border-top: 8px solid #3498db;
+	border-radius: 50%;
+	width: 60px;
+	height: 60px;
+	animation: spin 2s linear infinite;
+	margin: 20px auto;
+	/* Center the loader */
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
 }

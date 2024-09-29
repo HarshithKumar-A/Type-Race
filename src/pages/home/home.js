@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import classNames from 'classnames';
 import jsonData from "../../snippets.json"
 import './home.css';
-import Sidebar from '../../component/sidebar/sidebar';
+import { SideBar } from '../../component/sidebar/sidebar';
 import { SetScore, UserData, setStorage, getStaorage } from '../../util';
 import ReactSpeedometer from "react-d3-speedometer"
 import RaceCanvas from '../../component/raceCanvas/RaceCanvas';
@@ -10,23 +10,23 @@ import { useSelector, useDispatch } from 'react-redux';
 import { currentProgressOwn, currentSpeedProgress } from '../../redux/slice/raceSlice';
 import Confetti from 'react-confetti';
 import { useWindowSize } from '@react-hook/window-size';
-import { Fab, Action } from 'react-tiny-fab';
-import Drawer from 'react-modern-drawer';
 import 'react-modern-drawer/dist/index.css';
 import { useNavigate } from "react-router-dom";
 import Modal from 'react-modal';
 import FontSizeChanger from 'react-font-size-changer';
 import War from '../../component/War/war';
+import { FabOptions } from '../../component/Fab/Fab_Options';
+
+const correctAudio = new Audio('https://www.typingclub.com/m/audio/typewriter.mp3');
+const wrongAudio = new Audio('https://www.typingclub.com/m/audio/error.mp3');
+
+const IMAGE_LIST = ['/bg/bg.jpg', '/bg/bg2.jpg', '/bg/bg3.jpg', '/bg/bg4.jpg', '/bg/bg5.jpg']
 
 function Home() {
-  const correctAudio = new Audio('https://www.typingclub.com/m/audio/typewriter.mp3');
-  const wrongAudio = new Audio('https://www.typingclub.com/m/audio/error.mp3');
   const inputRef = React.createRef();
-  const [scorelist, setScoreList] = useState([])
-  const { width, height } = useWindowSize()
+  const [scoreList, setScoreList] = useState([]);
   const [wpm, setWpm] = useState(0);
   const [gameModeNew, setGameMode] = useState(0);
-  const [openBottomDrawer, setOpenBottomDrawer] = useState(false);
   const [bgUrl, setBgURL] = useState('/bg/bg3.jpg');
   const [isModalOpen, setModal] = useState(false);
   const [gameState, setGameState] = useState({
@@ -49,19 +49,22 @@ function Home() {
     progressOpenenet1: 0,
     progressOpenenet2: 0,
   })
+
+  const { width, height } = useWindowSize()
   let navigate = useNavigate();
   const dispatch = useDispatch()
+
   useEffect(() => {
     isNewUser()
     getScoreBoard()
-    chnageBG()
+    changeBG()
     sessionStorage.setItem('newGame', false);
     sessionStorage.setItem('GameStarted', false)
     const interval = setInterval(() => {
       if (sessionStorage.getItem('GameStarted') !== 'false') {
         let speed
-        if (scorelist.length) {
-          speed = (scorelist[0].score / sessionStorage.getItem('snippetLength')) * 1.6666666666666667
+        if (scoreList.length) {
+          speed = (scoreList[0].score / sessionStorage.getItem('snippetLength')) * 1.6666666666666667
         } else {
           speed = (localStorage.getItem('Score') / sessionStorage.getItem('snippetLength')) * 1.6666666666666667
         }
@@ -75,7 +78,7 @@ function Home() {
       }
     }, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [dispatch]);
 
   const updateEnteredText = event => {
     let newNewText = event.target ? event.target.value : event;
@@ -166,7 +169,7 @@ function Home() {
 
   const postUserScore = () => {
 
-    const userPrevScore = scorelist.filter((elm) => elm.name === getStaorage('User_Detail').id);
+    const userPrevScore = scoreList.filter((elm) => elm.name === getStaorage('User_Detail').id);
     console.log(userPrevScore, Number(gameState.wpm))
     if (userPrevScore.length === 0 || userPrevScore[0]?.score < Number(gameState.wpm)) {
       const requestOptions = {
@@ -213,13 +216,9 @@ function Home() {
       )
   }
 
-  const toggleDrawer = () => {
-    setOpenBottomDrawer((prevState) => !prevState)
-  }
 
-  const chnageBG = () => {
-    const list = ['/bg/bg.jpg', '/bg/bg2.jpg', '/bg/bg3.jpg', '/bg/bg4.jpg', '/bg/bg5.jpg']
-    setBgURL(list[Math.floor((Math.random() * list.length))])
+  const changeBG = () => {
+    setBgURL(IMAGE_LIST[Math.floor((Math.random() * IMAGE_LIST.length))])
   }
 
   const customStyles = {
@@ -230,6 +229,7 @@ function Home() {
       bottom: 'auto',
       marginRight: '-50%',
       transform: 'translate(-50%, -50%)',
+      width: '370px',
     },
   };
 
@@ -238,69 +238,50 @@ function Home() {
   }
 
   const registerUser = () => {
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ "name": document.getElementById("user_name").value })
-    };
-    fetch(process.env.REACT_APP_API_PORT + '/players/', requestOptions)
-      .then(response => response.json())
-      .then(res => {
-        if (res.id) {
-          setStorage('User_Detail', res);
-          isNewUser();
-        } else {
-          alert(res.name)
-        }
-      })
+    const userName = document.getElementById("user_name").value;
+    const nameRegex = /^[a-zA-Z]+$/;
+    if (nameRegex.test(userName) && userName.length > 4) {
+      // const requestOptions = {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({ "name": userName  && userName.length > 6})
+      // };
+      // fetch(process.env.REACT_APP_API_PORT + '/players/', requestOptions)
+      //   .then(response => response.json())
+      //   .then(res => {
+      //     if (res.id) {
+      //       setStorage('User_Detail', res);
+      //       isNewUser();
+      //     } else {
+      //       alert(res.name)
+      //     }
+      //   })
+      document.getElementById("error").innerText = '';
+    } else {
+      document.getElementById("error").innerText = 'The name appears to be not valid..'
+    }
   }
 
   return (
     <div>
       <Modal
-        isOpen={isModalOpen}
+        isOpen={true}
         style={customStyles}
         contentLabel="Example Modal"
       >
         <div>Enter Name</div>
-        <input className='form-control' id="user_name" />
-        <button onClick={() => registerUser()} className='form-control btn btn-primary mt-3'>Submit</button>
+        <input className='form-control mb-2' id="user_name" />
+        <span id='error' className=''></span>
+        <button onClick={() => registerUser()} className='form-control btn btn-primary mt-2'>Submit</button>
       </Modal>
-
-      <Fab
-        alwaysShowTitle={true}
-        style={{ bottom: 0 }}
-        icon="+"
-      >
-        <Action
-          text="Background Images"
-          onClick={() => { setOpenBottomDrawer(true) }}
-        >
-          <img src='picture.svg' className='vehicle'></img>
-        </Action>
-        <Action
-          text="View Score Board"
-          onClick={() => { navigate('/scores'); }}
-        >
-          <img src='crown.svg' className='vehicle'></img>
-        </Action>
-      </Fab>
-
-      <Drawer
-        open={openBottomDrawer}
-        onClose={toggleDrawer}
-        direction='bottom'
-        className='bla bla bla'
-      >
-        <div>From Here You Can Select Background Images</div>
-      </Drawer>
 
       <Confetti
         width={width}
         height={height}
         run={gameFinished}
       />
-      <Sidebar gameMode={{ mode: gameModeNew, scorelist: scorelist, gameStarted: gameState.started }} setGameMode={setGameMode} />
+
+      <SideBar gameMode={{ mode: gameModeNew, scoreList: scoreList, gameStarted: gameState.started }} setGameMode={setGameMode} />
       <div className='background-wallpaper' style={{ backgroundImage: 'url(' + bgUrl + ')' }}></div>
       <div className={
 
@@ -327,9 +308,9 @@ function Home() {
         </span>
         <span className={classNames("w-95 text-canvas", { "d-none": gameModeNew !== 1 })}>
           <RaceCanvas totalLength={gameState.snippet.split(/\s+/).length} correctLength={gameState.correctText?.split(/\s+/).length} race1={race.progressOpenenet1}
-            scorelist={scorelist[0]} />
+            scoreList={scoreList[0]} />
         </span>
-        <div style={{width: '90%'}}>
+        <div style={{ width: '90%' }}>
           <span className={classNames({ "d-none": gameModeNew === 2 })}>{wpm}WPM</span>
           <FontSizeChanger
             targets={['#target-one']}
@@ -364,7 +345,8 @@ function Home() {
           </span>
         </div>
       </div>
-      <span className='position-absolute bottom-0 end-0'>highest score : {UserData()}WPM</span>
+      <span className='position-absolute bottom-0 end-0'>Your highest score : {UserData()}WPM</span>
+      <FabOptions setBgURL={setBgURL} showOptionArray={['about', 'scoreboard', 'bg-list']} />
     </div>
   );
 }

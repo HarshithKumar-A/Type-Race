@@ -12,3 +12,10 @@
 .vehicle span {
     color: #ffcc97;
 }
+.helper-text {
+    font-size: 10px;
+}
+
+.helper-text a {
+    color: #e0d8cf !important;
+}
