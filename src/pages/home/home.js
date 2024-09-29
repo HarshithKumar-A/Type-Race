@@ -241,21 +241,21 @@ function Home() {
     const userName = document.getElementById("user_name").value;
     const nameRegex = /^[a-zA-Z]+$/;
     if (nameRegex.test(userName) && userName.length > 4) {
-      // const requestOptions = {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ "name": userName  && userName.length > 6})
-      // };
-      // fetch(process.env.REACT_APP_API_PORT + '/players/', requestOptions)
-      //   .then(response => response.json())
-      //   .then(res => {
-      //     if (res.id) {
-      //       setStorage('User_Detail', res);
-      //       isNewUser();
-      //     } else {
-      //       alert(res.name)
-      //     }
-      //   })
+      const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ "name": userName  && userName.length > 6})
+      };
+      fetch(process.env.REACT_APP_API_PORT + '/players/', requestOptions)
+        .then(response => response.json())
+        .then(res => {
+          if (res.id) {
+            setStorage('User_Detail', res);
+            isNewUser();
+          } else {
+            alert(res.name)
+          }
+        })
       document.getElementById("error").innerText = '';
     } else {
       document.getElementById("error").innerText = 'The name appears to be not valid..'
@@ -265,7 +265,7 @@ function Home() {
   return (
     <div>
       <Modal
-        isOpen={true}
+        isOpen={isModalOpen}
         style={customStyles}
         contentLabel="Example Modal"
       >
