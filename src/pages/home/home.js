@@ -244,7 +244,7 @@ function Home() {
       const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ "name": userName  && userName.length > 6})
+        body: JSON.stringify({ "name": userName })
       };
       fetch(process.env.REACT_APP_API_PORT + '/players/', requestOptions)
         .then(response => response.json())
